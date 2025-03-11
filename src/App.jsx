@@ -25,10 +25,6 @@ import { EditProfile } from "./EditProfile";
 import { Login } from "./Login";
 import { AboutUs } from "./AboutUs";
 import { BlogGuide } from "./BlogGuide";
-import { GuideHome } from "./GuideHome";
-import { Excursiones } from "./Excursiones";
-import { DetalleExcursion } from "./DetalleExcursion";
-import { Forum } from "./Forum";
 import "./App.css";
 
 // Setup de Firebase
@@ -38,7 +34,7 @@ const firebaseConfig = {
   projectId: "vive-avila",
   storageBucket: "vive-avila.firebasestorage.app",
   messagingSenderId: "889941160937",
-  appId: "1:889941160937:web:ed10617ded750209689178",
+  appId: "1:889941160937:web:172ddacef465a492689178"
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -48,9 +44,7 @@ export const firebaseGoogleProvider = new GoogleAuthProvider();
 
 export const firebaseUsersCollection = collection(firebaseDb, "users");
 export const firebaseContactMessagesCollection = collection(firebaseDb, "contactMessages");
-export const firebasePendingTripsCollection = collection(firebaseDb, "pendingTrips");
 export const firebaseBlogArticlesCollection = collection(firebaseDb, "blogArticles");
-export const firebaseForumMessagesCollection = collection(firebaseDb, "forumMessages");
 
 const pageList = Object.freeze({
   "": () => MainPage,
@@ -59,9 +53,6 @@ const pageList = Object.freeze({
   login: () => Login,
   aboutUs: () => AboutUs,
   blogGuide: () => BlogGuide,
-  excursiones: () => Excursiones,
-  detalleExcursion: () => DetalleExcursion,
-  forum: () => Forum,
 });
 const pageString = window.location.pathname.split("/", 2)[1];
 const pageStartingValue =
@@ -96,39 +87,15 @@ export function Navbar({ setPage, user }) {
       <div className={`nav-links ${isOpen ? "open" : ""}`}>
         <a
           className="nav-item"
-          onClick={() => {
-            if (!user) return void setPage(() => MainPage);
-            switch (user.type) {
-              case UserType.student:
-                setPage(() => MainPage);
-                break;
-              case UserType.guide:
-                setPage(() => GuideHome);
-                break;
-              case UserType.admin:
-                setPage(() => MainPage);
-                break;
-            }
-          }}
-        >
+          onClick={() => void setPage(() => MainPage)}>
           Inicio
         </a>
-        {(!user || user.type === UserType.student) && (
-          <>
-            <a onClick={() => setPage(() => BlogGuide)} className="nav-item">
-              Guía
-            </a>
-            <a onClick={() => setPage(() => Excursiones)} className="nav-item">
-              Excursiones
-            </a>
-            <a onClick={() => setPage(() => Forum)} className="nav-item">
-              Foro
-            </a>
-            <a onClick={() => setPage(() => AboutUs)} className="nav-item">
-              Sobre Nosotros
-            </a>
-          </>
-        )}
+        <a onClick={() => setPage(() => BlogGuide)} className="nav-item">
+          Guía
+        </a>
+        <a onClick={() => setPage(() => AboutUs)} className="nav-item">
+          Sobre Nosotros
+        </a>
         {user ? (
           <div className="nav-dropdown-container">
             <a className="nav-item">
@@ -136,9 +103,6 @@ export function Navbar({ setPage, user }) {
               {user.pfp && !user.provider && <div className="nav-pfp-wrapper"><img className="nav-pfp" src={user.pfp} /></div>}
             </a>
             <div className="nav-dropdown">
-              <a onClick={() => setPage(() => MainPage)} className="nav-item">
-                Mi Perfil
-              </a>
               {!user.provider && (
                 <a onClick={() => setPage(() => EditProfile)} className="nav-item">
                   Editar Perfil
@@ -193,7 +157,6 @@ export function App() {
   const [Page, setPage] = useState(pageStartingValue);
   const [user, setUser] = useState(storedUser && JSON.parse(storedUser));
   const [notification, setNotification] = useState();
-  const [excursionSeleccionada, setExcursionSeleccionada] = useState();
 
   function setAndStoreUser(u) {
     if (!u) window.localStorage.removeItem("vive-avila-user");
@@ -246,17 +209,7 @@ export function App() {
       const userDoc = querySnapshot.docs[0];
       if (!userDoc) return;
       const dbUser = userDoc.data();
-      switch (dbUser.type) {
-        case UserType.student:
-          setPage(() => MainPage);
-          break;
-        case UserType.guide:
-          setPage(() => GuideHome);
-          break;
-        case UserType.admin:
-          setPage(() => MainPage);
-          break;
-      }
+      setPage(() => MainPage);
       setAndStoreUser({ ...dbUser, auth: userAuth, docRef: userDoc.ref });
     });
   isFirstRender = false;
@@ -305,8 +258,6 @@ export function App() {
         setAndStoreUser={setAndStoreUser}
         addNotification={addNotification}
         googleSignIn={googleSignIn}
-        excursionSeleccionada={excursionSeleccionada}
-        setExcursionSeleccionada={setExcursionSeleccionada}
       />
       {notification && <div className="notification">{notification}</div>}
     </>

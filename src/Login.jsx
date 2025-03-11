@@ -29,7 +29,6 @@ export function Login({ setPage, addNotification, googleSignIn }) {
                         return;
                     default:
                         addNotification('Error genérico');
-                        console.log(e);
                         return;
                 }
             });

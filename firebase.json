@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "vive-avila-6c8af",
     "public": "dist/",
     "ignore": [
       "firebase.json",

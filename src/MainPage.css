@@ -154,8 +154,8 @@
 .start_activities-grid {
 	display: flex;
 	justify-content: space-around;
-	width: 100%;
-	padding: 83px 70px;
+	width: 90%;
+	padding: 70px 70px;
 }
 
 .start_activity-item {

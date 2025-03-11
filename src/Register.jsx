@@ -44,9 +44,7 @@ export function Register({ setPage, addNotification, googleSignIn }) {
                     addNotification('Error: ese email ya ha sido registrado');
                     return;
                 default:
-                    // TODO: quitar esto
                     addNotification('Error genérico');
-                    console.log(e);
                     return;
             }
         }
