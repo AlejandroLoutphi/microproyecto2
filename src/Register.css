@@ -56,7 +56,7 @@
 .register_img {
 	width: 100%;
 	object-fit: cover;
-	background-image: url('foto-6-1024x768.jpg');
+	background-image: url('../foto-6-1024x768.jpg');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
